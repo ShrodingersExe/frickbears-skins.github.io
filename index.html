@@ -1,1 +1,133 @@
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#090b0a">
+    <meta name="description" content="A community-made animatronic skin collection and tracker for Frickbears 3: Four Layers Down.">
+
+    <title>Frickbears 3 - Animatronic Skins</title>
+
+    <!-- Website styling -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Website functionality -->
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <main class="game-shell">
+
+        <!-- Header -->
+        <header class="topbar">
+
+            <div class="heading">
+                <p class="eyebrow">
+                    FRICKBEARS 3: FOUR LAYERS DOWN
+                </p>
+
+                <h1>
+                    MOD SETTINGS
+                    <span>(ANIMATRONIC SKINS)</span>
+                </h1>
+            </div>
+
+            <!-- Skin completion statistics -->
+            <div class="stats" aria-live="polite">
+
+                <span id="completion-count">
+                    0 / 0 WITH SKINS
+                </span>
+
+                <strong id="completion-percent">
+                    0%
+                </strong>
+
+            </div>
+
+        </header>
+
+
+        <!-- Search and Show All controls -->
+        <section class="toolbar" aria-label="Character filters">
+
+            <label class="search-wrap" for="search">
+
+                <span aria-hidden="true">⌕</span>
+
+                <input
+                    type="search"
+                    id="search"
+                    placeholder="Search characters or skins..."
+                    autocomplete="off"
+                >
+
+            </label>
+
+
+            <label class="toggle">
+
+                <input
+                    type="checkbox"
+                    id="show-all"
+                    checked
+                >
+
+                <span class="toggle-track" aria-hidden="true"></span>
+
+                <span>SHOW ALL CHARACTERS</span>
+
+            </label>
+
+        </section>
+
+
+        <!-- Character and skin column headings -->
+        <div class="list-heading">
+
+            <span>ANIMATRONIC</span>
+
+            <span>
+                AVAILABLE SKINS
+                <small>· SELECT A SKIN ICON TO OPEN ITS DOWNLOAD</small>
+            </span>
+
+        </div>
+
+
+        <!-- JavaScript inserts character rows here -->
+        <section
+            id="character-list"
+            class="character-list"
+            aria-label="Animatronic skins"
+        >
+
+            <p class="loading">
+                LOADING SKIN DATABASE...
+            </p>
+
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <span id="visible-count">
+                0 CHARACTERS
+            </span>
+
+            <span>
+                SKIN COLLECTION TRACKER
+            </span>
+
+        </footer>
+
+    </main>
+
+</body>
+
+</html>
