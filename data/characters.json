@@ -1,11 +1,5 @@
 [
   {
-    "characterId": 0,
-    "id": "freddy",
-    "name": "Freddy",
-    "icon": "000-freddy.png"
-  },
-  {
     "characterId": 2,
     "id": "chica",
     "name": "Chica",
@@ -16,6 +10,12 @@
     "id": "toychica",
     "name": "Toy Chica",
     "icon": "008-toychica.png"
+  },
+  {
+    "characterId": 9,
+    "id": "mangle",
+    "name": "Mangle",
+    "icon": "009-mangle.png"
   },
   {
     "characterId": 12,
@@ -30,10 +30,16 @@
     "icon": "012-jj.png"
   },
   {
-    "characterId": 21,
-    "id": "plushtrap",
-    "name": "Plushtrap",
-    "icon": "021-plushtrap.png"
+    "characterId": 16,
+    "id": "marionette",
+    "name": "Marionette",
+    "icon": "016-marionette.png"
+  },
+  {
+    "characterId": 19,
+    "id": "phantoms",
+    "name": "The Phantoms",
+    "icon": "019-phantoms.png"
   },
   {
     "characterId": 25,
