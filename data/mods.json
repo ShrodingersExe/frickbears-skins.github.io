@@ -1,0 +1,23 @@
+[
+  {
+    "characterId": 0,
+    "id": "splinks",
+    "name": "Splinks Freddy",
+    "icon": "000-0-splinks.png",
+    "download": "https://gamebanana.com/mods/734913"
+  },
+  {
+    "characterId": 21,
+    "id": "gubby",
+    "name": "Gubby",
+    "icon": "021-0-gubby.png",
+    "download": "https://gamebanana.com/mods/734410"
+  },
+  {
+    "characterId": 25,
+    "id": "lolbitties",
+    "name": "Lolbit with a Rack [Lolbitties]",
+    "icon": "025-0-lolbitties.png",
+    "download": "https://gamebanana.com/mods/735036"
+  }
+]
