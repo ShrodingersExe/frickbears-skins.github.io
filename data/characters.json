@@ -16,5 +16,11 @@
     "id": "plushtrap",
     "name": "Plushtrap",
     "icon": "021-plushtrap.png"
+  },
+  {
+    "characterId": 25,
+    "id": "lolbit",
+    "name": "Lolbit",
+    "icon": "025-lolbit.png"
   }
 ]
