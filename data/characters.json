@@ -1,0 +1,20 @@
+[
+  {
+    "characterId": 0,
+    "id": "freddy",
+    "name": "Freddy",
+    "icon": "000-freddy.png"
+  },
+  {
+    "characterId": 1,
+    "id": "bonnie",
+    "name": "Bonnie",
+    "icon": "001-bonnie.png"
+  },
+  {
+    "characterId": 21,
+    "id": "plushtrap",
+    "name": "Plushtrap",
+    "icon": "021-plushtrap.png"
+  }
+]
