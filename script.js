@@ -1,4 +1,3 @@
-
 const CHARACTER_PATH = "data/characters.json";
 const MOD_PATH = "data/mods.json";
 
@@ -8,7 +7,6 @@ const MOD_ICON_PATH = "assets/mods/";
 const characterList = document.getElementById("character-list");
 const searchInput = document.getElementById("search");
 const showAllToggle = document.getElementById("show-all");
-
 const completionCount = document.getElementById("completion-count");
 const completionPercent = document.getElementById("completion-percent");
 const visibleCount = document.getElementById("visible-count");
@@ -24,178 +22,147 @@ async function loadData() {
     ]);
 
     if (!characterResponse.ok || !modResponse.ok) {
-      throw new Error("Could not load JSON files.");
+      throw new Error("Could not load the character or mod data.");
     }
 
     characters = await characterResponse.json();
     mods = await modResponse.json();
 
-    if (!Array.isArray(characters) || !Array.isArray(mods)) {
-      throw new Error("The JSON files must contain arrays.");
-    }
-
-    characters.sort((a, b) =>
-      Number(a.characterId) - Number(b.characterId)
-    );
+    characters.sort((a, b) => a.characterId - b.characterId);
 
     renderCharacters();
-
   } catch (error) {
     console.error(error);
 
-    characterList.textContent =
-      "ERROR: COULD NOT LOAD CHARACTER OR MOD DATA.";
+    characterList.innerHTML =
+      '<p class="loading-message">ERROR LOADING CHARACTER DATA.</p>';
   }
 }
 
 function getModsForCharacter(characterId) {
-  return mods.filter(mod =>
-    Number(mod.characterId) === Number(characterId)
-  );
+  return mods.filter(mod => mod.characterId === characterId);
 }
 
-function createImage(path, name, className) {
-  const image = document.createElement("img");
+function createTile(imagePath, name, isMod = false, download = "") {
+  const tile = document.createElement(isMod ? "a" : "div");
 
-  image.src = path;
+  tile.className = isMod ? "skin-link" : "skin-link character-tile";
+
+  if (isMod && download) {
+    tile.href = download;
+    tile.target = "_blank";
+    tile.rel = "noopener noreferrer";
+  }
+
+  tile.dataset.name = name;
+
+  const image = document.createElement("img");
+  image.src = imagePath;
   image.alt = name;
-  image.className = className;
   image.loading = "lazy";
 
-  image.addEventListener("error", () => {
-    image.style.visibility = "hidden";
-  });
+  image.onerror = () => {
+    image.style.display = "none";
+    tile.classList.add("missing-icon");
+    tile.textContent = "?";
+  };
 
-  return image;
+  tile.appendChild(image);
+
+  return tile;
 }
 
 function renderCharacters() {
-  characterList.replaceChildren();
+  characterList.innerHTML = "";
 
-  const searchTerm = searchInput.value.trim().toLowerCase();
+  const search = searchInput.value.trim().toLowerCase();
+  const showAll = showAllToggle.checked;
 
-  const charactersWithMods = characters.filter(character =>
-    getModsForCharacter(character.characterId).length > 0
-  ).length;
+  let completedCharacters = 0;
+  let displayedCharacters = 0;
 
-  const percentage = characters.length
-    ? Math.round((charactersWithMods / characters.length) * 100)
-    : 0;
-
-  completionCount.textContent =
-    `${charactersWithMods} / ${characters.length} WITH SKINS`;
-
-  completionPercent.textContent = `${percentage}%`;
-
-  let displayed = 0;
-
-  for (const character of characters) {
+  characters.forEach(character => {
     const characterMods = getModsForCharacter(character.characterId);
 
-    // Hide characters without mods when Show All is disabled.
-    if (!showAllToggle.checked && characterMods.length === 0) {
-      continue;
+    if (characterMods.length > 0) {
+      completedCharacters++;
     }
 
-    // Search character names and mod names.
+    if (!showAll && characterMods.length === 0) {
+      return;
+    }
+
     const searchableText = [
       character.name,
-      character.id,
-      ...characterMods.map(mod => mod.name),
-      ...characterMods.map(mod => mod.id)
+      ...characterMods.map(mod => mod.name)
     ].join(" ").toLowerCase();
 
-    if (
-      searchTerm &&
-      !searchableText.includes(searchTerm)
-    ) {
-      continue;
+    if (search && !searchableText.includes(search)) {
+      return;
     }
 
-    displayed++;
+    displayedCharacters++;
 
     const row = document.createElement("article");
     row.className = "character-row";
 
-    // Character information and original icon.
     const info = document.createElement("div");
     info.className = "character-info";
 
-    const originalIcon = createImage(
-      CHARACTER_ICON_PATH + character.icon,
-      character.name,
-      "character-icon"
-    );
+    const name = document.createElement("span");
+    name.className = "character-name";
+    name.textContent = `${character.characterId + 1}: ${character.name}`;
 
-    const characterName = document.createElement("span");
-    characterName.className = "character-name";
-    characterName.textContent = character.name;
+    info.appendChild(name);
 
-    info.append(originalIcon, characterName);
-
-    // Mod icons.
     const skinList = document.createElement("div");
     skinList.className = "skin-list";
 
-    if (characterMods.length === 0) {
-      const noSkins = document.createElement("span");
-      noSkins.className = "no-skins";
-      noSkins.textContent = "NO SKINS YET";
+    // Original character icon always occupies the first tile.
+    skinList.appendChild(
+      createTile(
+        CHARACTER_ICON_PATH + character.icon,
+        character.name
+      )
+    );
 
-      skinList.append(noSkins);
-    }
-
-    for (const mod of characterMods) {
-      const link = document.createElement("a");
-
-      link.className = "skin-link";
-      link.dataset.name = mod.name;
-      link.title = mod.name;
-      link.setAttribute("aria-label", `Open ${mod.name} download page`);
-
-      const validURL = /^https?:\/\//i.test(mod.download || "");
-
-      if (validURL) {
-        link.href = mod.download;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-      } else {
-        link.setAttribute("aria-disabled", "true");
-        link.title = `${mod.name} (download link unavailable)`;
-      }
-
-      const modIcon = createImage(
-        MOD_ICON_PATH + mod.icon,
-        mod.name,
-        ""
+    // Mod icons follow the original character icon.
+    characterMods.forEach(mod => {
+      skinList.appendChild(
+        createTile(
+          MOD_ICON_PATH + mod.icon,
+          mod.name,
+          true,
+          mod.download
+        )
       );
+    });
 
-      link.append(modIcon);
-      skinList.append(link);
-    }
+    row.appendChild(info);
+    row.appendChild(skinList);
 
-    row.append(info, skinList);
-    characterList.append(row);
-  }
+    // Seven tiles per row, including the original character icon.
+    const totalTiles = 1 + characterMods.length;
+    const tileRows = Math.ceil(totalTiles / 7);
 
-  visibleCount.textContent =
-    `${displayed} CHARACTER${displayed === 1 ? "" : "S"}`;
+    row.style.height = `${16 + 48 * tileRows}px`;
 
-  if (displayed === 0) {
-    const emptyMessage = document.createElement("p");
-    emptyMessage.className = "empty-state";
-    emptyMessage.textContent =
-      "NO CHARACTERS OR SKINS MATCH YOUR SEARCH.";
+    characterList.appendChild(row);
+  });
 
-    characterList.append(emptyMessage);
+  completionCount.textContent = completedCharacters;
+  completionPercent.textContent =
+    `${Math.round((completedCharacters / characters.length) * 100)}%`;
+
+  visibleCount.textContent = displayedCharacters;
+
+  if (displayedCharacters === 0) {
+    characterList.innerHTML =
+      '<p class="loading-message">NO CHARACTERS FOUND.</p>';
   }
 }
 
-// Update the list when searching.
 searchInput.addEventListener("input", renderCharacters);
-
-// Update the list when Show All is toggled.
 showAllToggle.addEventListener("change", renderCharacters);
 
-// Load the JSON files when the page starts.
 loadData();
